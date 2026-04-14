@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kwakkenberg Rehab</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #0f1410;
+  --surface: #161d18;
+  --card: #1c2620;
+  --card2: #212e27;
+  --border: rgba(255,255,255,0.07);
+  --border-md: rgba(255,255,255,0.12);
+  --text: #e8ede9;
+  --text-muted: #7a9080;
+  --text-hint: #455c4d;
+  --accent: #7eb87a;
+  --accent-dim: #3a5e38;
+  --accent-bg: #1e2e1f;
+  --bike: #7eb87a;
+  --bike-bg: #1a2b1a;
+  --swim: #6ab0c8;
+  --swim-bg: #192530;
+  --gym: #d4a96a;
+  --gym-bg: #2a2015;
+  --rest: #7a9080;
+  --rest-bg: #1a2220;
+  --warn: #d4956a;
+  --warn-bg: #2a1e14;
+  --r: 14px;
+  --r-sm: 9px;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV TABS */
+.nav-bar {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.nav-tab {
+  flex: 1;
+  padding: 14px 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-hint);
+  text-align: center;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* HEADER */
+.app-header {
+  padding: 24px 20px 16px;
+  background: var(--surface);
+}
+.app-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.app-header .sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  font-weight: 300;
+}
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* WEEK SELECTOR */
+.week-scroll {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.week-scroll::-webkit-scrollbar { display: none; }
+.week-btn {
+  flex-shrink: 0;
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-md);
+  background: var(--card);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.week-btn.active {
+  background: var(--accent);
+  color: #0f1410;
+  border-color: var(--accent);
+  font-weight: 500;
+}
+
+/* WEEK HERO */
+.week-hero {
+  padding: 4px 20px 16px;
+}
+.week-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+.week-focus {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.progress-bar {
+  flex: 1;
+  height: 3px;
+  background: var(--border-md);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.progress-label {
+  font-size: 11px;
+  color: var(--text-hint);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* KWAK BANNER */
+.kwak-banner {
+  margin: 0 20px 14px;
+  background: var(--warn-bg);
+  border: 1px solid rgba(212,149,106,0.2);
+  border-radius: var(--r-sm);
+  padding: 10px 13px;
+  font-size: 12px;
+  color: var(--warn);
+  line-height: 1.5;
+}
+.kwak-banner strong { font-weight: 500; }
+
+/* DAY CARDS */
+.days-list { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 9px; }
+
+.day-card {
+  background: var(--card);
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+.day-card.done { opacity: 0.55; }
+
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.day-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.icon-bike { background: var(--bike-bg); }
+.icon-swim { background: var(--swim-bg); }
+.icon-gym  { background: var(--gym-bg); }
+.icon-rest { background: var(--rest-bg); }
+
+.day-meta { flex: 1; min-width: 0; }
+.day-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.day-desc { font-size: 12px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.check-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-md);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: transparent;
+  transition: all 0.15s;
+}
+.check-btn.checked { background: var(--accent); border-color: var(--accent); color: #0f1410; }
+
+.chevron {
+  font-size: 10px;
+  color: var(--text-hint);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.day-header.open .chevron { transform: rotate(180deg); }
+
+/* DETAIL */
+.day-detail {
+  display: none;
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--border);
+}
+.day-detail.open { display: block; }
+
+.section { margin-top: 13px; }
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-hint);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.ex-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.45;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ex-item:last-child { border-bottom: none; }
+.ex-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.knee-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-radius: 5px;
+  padding: 2px 6px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.tip-box {
+  background: var(--card2);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.tip-box strong { color: var(--accent); font-weight: 500; }
+
+textarea {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 9px 11px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  resize: none;
+  min-height: 64px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+textarea:focus { border-color: var(--border-md); }
+textarea::placeholder { color: var(--text-hint); }
+
+/* WEEK REFLECTION */
+.reflection-section {
+  padding: 0 20px 30px;
+}
+.reflection-label {
+  font-size: 11px;
+  color: var(--text-hint);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+
+/* ===== NUTRITION PAGE ===== */
+.nutrition-header {
+  padding: 24px 20px 8px;
+}
+.nutrition-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+}
+.nutrition-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.calorie-card {
+  margin: 12px 20px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--r);
+  padding: 16px;
+}
+.calorie-card h3 {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+.calorie-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.cal-stat {
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+}
+.cal-stat .val {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+  font-family: 'Playfair Display', serif;
+}
+.cal-stat .lbl {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.nutr-section {
+  padding: 16px 20px 0;
+}
+.nutr-section h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.swap-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 9px;
+  overflow: hidden;
+}
+.swap-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.swap-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.swap-title { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+.swap-impact {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+.impact-high { background: var(--accent-bg); color: var(--accent); }
+.impact-med  { background: var(--warn-bg); color: var(--warn); }
+
+.swap-detail {
+  display: none;
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.swap-detail.open { display: block; }
+.swap-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.swap-row:last-child { border-bottom: none; }
+.swap-from { color: var(--warn); flex: 1; }
+.swap-arrow { color: var(--text-hint); flex-shrink: 0; }
+.swap-to { color: var(--accent); flex: 1; }
+
+/* CALORIE BURN SECTION */
+.burn-card {
+  margin: 0 20px 9px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+}
+.burn-card h4 { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; }
+.burn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.burn-row:last-child { border-bottom: none; }
+.burn-activity { color: var(--text); }
+.burn-kcal { color: var(--accent); font-weight: 500; }
+
+.nutr-tip {
+  margin: 0 20px 9px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 13px 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.nutr-tip strong { color: var(--text); font-weight: 500; }
+
+.bottom-space { height: 50px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>Kwakkenberg Rehab</h1>
+  <div class="sub">Knee · Lower leg · Weight loss · 4 weeks</div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-tab active" onclick="showPage('training')">Training</div>
+  <div class="nav-tab" onclick="showPage('nutrition')">Nutrition</div>
+</div>
+
+<!-- TRAINING PAGE -->
+<div class="page active" id="page-training">
+  <div class="week-scroll" id="weekScroll"></div>
+  <div id="weekArea"></div>
+</div>
+
+<!-- NUTRITION PAGE -->
+<div class="page" id="page-nutrition">
+  <div class="nutrition-header">
+    <h2>Eating for fat loss</h2>
+    <p>At 1.93m / 100–105 kg, modest changes make a big difference. No strict diet — just smarter swaps and timing.</p>
+  </div>
+
+  <div class="calorie-card">
+    <h3>Your numbers (estimated)</h3>
+    <div class="calorie-grid">
+      <div class="cal-stat"><div class="val">~2650</div><div class="lbl">kcal maintenance / day</div></div>
+      <div class="cal-stat"><div class="val">~2150</div><div class="lbl">kcal target / day</div></div>
+      <div class="cal-stat"><div class="val">500</div><div class="lbl">kcal daily deficit</div></div>
+      <div class="cal-stat"><div class="val">~0.5 kg</div><div class="lbl">realistic loss / week</div></div>
+    </div>
+  </div>
+
+  <div class="nutr-section">
+    <h3>High-impact food swaps</h3>
+  </div>
+
+  <div id="swapCards"></div>
+
+  <div class="nutr-section" style="padding-bottom:10px;">
+    <h3>Calories burned training</h3>
+  </div>
+  <div class="burn-card">
+    <h4>Estimated for your body weight (100 kg)</h4>
+    <div class="burn-row"><span class="burn-activity">Cycling 45 min, moderate</span><span class="burn-kcal">~480 kcal</span></div>
+    <div class="burn-row"><span class="burn-activity">Swimming 35 min, front crawl</span><span class="burn-kcal">~420 kcal</span></div>
+    <div class="burn-row"><span class="burn-activity">Gym session 45 min</span><span class="burn-kcal">~320 kcal</span></div>
+    <div class="burn-row"><span class="burn-activity">Kwakkenberg climb (~5 min)</span><span class="burn-kcal">~70 kcal</span></div>
+  </div>
+
+  <div class="nutr-section" style="padding-bottom:10px;">
+    <h3>Practical rules</h3>
+  </div>
+
+  <div class="nutr-tip"><strong>Protein first.</strong> Aim for 150–160 g protein per day. At a deficit, protein preserves muscle while fat drops. Every meal should have a clear protein source: eggs, chicken, fish, yoghurt, cottage cheese, legumes.</div>
+  <div class="nutr-tip"><strong>Processed food is mostly ultra-processed fat + refined carbs.</strong> These spike insulin, don&#39;t satisfy hunger, and are easy to overeat. Replacing even 2 takeaway meals per week with home-cooked alternatives typically removes 1000–1500 kcal without feeling like a diet.</div>
+  <div class="nutr-tip"><strong>Eat before training, not after (for big meals).</strong> A light meal 60–90 min before cycling or swimming gives better energy and reduces post-workout overeating.</div>
+  <div class="nutr-tip"><strong>Alcohol.</strong> If you drink regularly, this is where a large chunk of hidden calories often sits. Beer and wine are ~150–200 kcal per glass with zero satiety. Even cutting back 2–3 drinks per week adds up to ~400–600 kcal saved.</div>
+  <div class="nutr-tip"><strong>Don't eat less on rest days.</strong> Muscle repair happens on rest days and needs protein. Keep intake steady — just avoid large carb-heavy meals in the evenings when activity is low.</div>
+  <div class="nutr-tip"><strong>Timeline.</strong> At a 500 kcal/day deficit plus 3–4 training sessions per week, expect 0.4–0.6 kg per week. To lose 10 kg realistically takes 3–4 months. Don't rush it — faster loss at this stage risks losing muscle mass along with fat, which slows your metabolism and weakens the knee further.</div>
+
+  <div class="bottom-space"></div>
+</div>
+
+<script>
+const KEY = 'kwak_v3';
+
+const swaps = [
+  {
+    icon: '🍟',
+    title: 'Takeaway / fast food',
+    impact: 'high',
+    items: [
+      ['McDonald&#39;s / kebab meal', '→', 'Home-cooked pasta with chicken (~400 kcal saved)'],
+      ['Pizza delivery', '→', 'Homemade pizza on wholegrain wrap (~500 kcal saved)'],
+      ['Fries as side', '→', 'Boiled or roasted potatoes (~300 kcal saved)'],
+      ['Fried snacks (bitterballen, kroket)', '→', 'Handful of nuts or boiled egg (~200 kcal saved)'],
+    ]
+  },
+  {
+    icon: '🥤',
+    title: 'Drinks',
+    impact: 'high',
+    items: [
+      ['Cola / frisdrank (500 ml)', '→', 'Sparkling water with lemon (~200 kcal saved)'],
+      ['Energy drinks', '→', 'Black coffee or green tea (~150 kcal saved)'],
+      ['Fruit juice', '→', 'Whole fruit — same vitamins, much more fibre (~120 kcal saved)'],
+      ['Alcohol (daily)', '→', 'Alcohol-free beer or cut to weekends only (~400+ kcal/week)'],
+    ]
+  },
+  {
+    icon: '🍞',
+    title: 'Bread & breakfast',
+    impact: 'med',
+    items: [
+      ['White bread + hagelslag', '→', 'Wholegrain bread + peanut butter or egg (~180 kcal saved, much more protein)'],
+      ['Croissant / pastry', '→', 'Greek yoghurt + oats + fruit (~300 kcal saved)'],
+      ['Skipping breakfast', '→', 'Protein-rich breakfast reduces total daily intake by ~250 kcal on average'],
+    ]
+  },
+  {
+    icon: '🍫',
+    title: 'Snacks',
+    impact: 'med',
+    items: [
+      ['Chips / crisps (bag)', '→', 'Rice cakes or cucumber with hummus (~280 kcal saved)'],
+      ['Chocolate bar', '→', '2 squares dark chocolate (70%+) — more satisfying, ~150 kcal saved'],
+      ['Cookie with coffee', '→', 'Just coffee — the habit is often stronger than the hunger (~100 kcal saved)'],
+    ]
+  },
+];
+
+const plan = [
+  {
+    week: 1, title: "Easy baseline",
+    focus: "Build habit. Knee stays comfortable throughout — no pain during exercise.",
+    kwak: "Go downhill first (toward Groesbeek or Berg en Dal) so you return fresh. Climbing when fatigued puts far more load on the patellofemoral joint.",
+    days: [
+      { name:"Monday", type:"bike", desc:"20 min · descend first, climb home",
+        ex:[
+          {t:"Descend from Kwakkenberg first — flat or downhill section, then return", knee:false},
+          {t:"Total 20 min including return climb", knee:false},
+          {t:"Lightest gear on the ascent — high cadence (70+ RPM), stay seated", knee:true},
+          {t:"Standing on the pedals compresses the kneecap hard — avoid it entirely for now", knee:true},
+          {t:"After ride: 5 min quad stretch — standing, heel to glute, hold 30s each side", knee:false},
+        ],
+        tip:"Saddle height: at the bottom of the pedal stroke, knee should have ~25–30° bend. Too low = excessive patellofemoral pressure on every stroke."
+      },
+      { name:"Tuesday", type:"gym", desc:"35 min · fysio protocol + upper body",
+        ex:[
+          {t:"Warm-up: 5 min slow walking to get the knee moving", knee:false},
+          {t:"Squats 4×10 — shallow depth (60° max), feet shoulder-width, toes slightly out", knee:true},
+          {t:"Lunges 4×14 — short stride, stay upright, don&#39;t let knee go past toes", knee:true},
+          {t:"Stair walking 4×14 steps — lead with healthy leg going up, injured leg going DOWN", knee:true},
+          {t:"Upper body: shoulder press, rows, or chest press — 3 sets each", knee:false},
+          {t:"Cool-down: straight leg raises 2×15 (lying flat, quad activation, zero joint load)", knee:false},
+        ],
+        tip:"Knee pain during squats or lunges = reduce depth immediately. Pain after is okay. Pain during means you&#39;ve gone too far."
+      },
+      { name:"Wednesday", type:"rest", desc:"Active rest · stretch & walk",
+        ex:[
+          {t:"10–15 min flat walk", knee:false},
+          {t:"Calf stretch: wall lean, injured leg back, heel flat — hold 30s × 3", knee:false},
+          {t:"Quad stretch: standing, heel to glute — hold 30s × 3 each side", knee:false},
+          {t:"Ankle circles: 10 each direction, both ankles", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Thursday", type:"swim", desc:"25 min · front crawl + pull buoy",
+        ex:[
+          {t:"Warm-up: 2 easy lengths, any pace", knee:false},
+          {t:"Main: 4 × 3 lengths front crawl, 60s rest between — comfortable pace", knee:false},
+          {t:"If knee is sore from Tuesday: use pull buoy for all lengths (removes leg load entirely)", knee:true},
+          {t:"Avoid breaststroke for now — the whip kick puts rotational stress on the patella", knee:true},
+          {t:"Cool-down: 2 backstroke lengths", knee:false},
+        ],
+        tip:"Swimming burns ~420 kcal per session at your weight with minimal joint load. Prioritise it even when legs are tired from cycling or gym."
+      },
+      { name:"Friday", type:"rest", desc:"Full rest",
+        ex:[{t:"Rest. Elevate leg if knee is swollen or warm after Thursday.", knee:false}],
+        tip:null
+      },
+      { name:"Saturday", type:"bike", desc:"20–25 min · note how knee responds",
+        ex:[
+          {t:"Same route as Monday — note if the return climb feels different", knee:false},
+          {t:"Pay attention: is the knee aching during the climb, or only after?", knee:true},
+          {t:"After ride: ice the knee for 10 min if it&#39;s warm or swollen", knee:true},
+          {t:"Post-ride: note pain level 1–10 in the notes field below", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Sunday", type:"rest", desc:"Full rest",
+        ex:[{t:"Rest completely.", knee:false}],
+        tip:null
+      },
+    ]
+  },
+  {
+    week: 2, title: "Build duration",
+    focus: "Longer rides, second gym session. Knee depth increases slightly.",
+    kwak: "If the return climb felt manageable last week, add a longer flat section before it. Still lightest gear going up, still seated.",
+    days: [
+      { name:"Monday", type:"bike", desc:"30 min · add flat section before climb",
+        ex:[
+          {t:"30 min total — extend the flat or rolling section before returning home", knee:false},
+          {t:"Experiment with one gear harder on flat sections, but drop back for the Kwakkenberg", knee:false},
+          {t:"Focus on heel-to-toe pedal stroke — not just pushing down", knee:false},
+          {t:"Post-ride: quad stretch + calf stretch, 5 min", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Tuesday", type:"gym", desc:"40 min · fysio + single-leg work",
+        ex:[
+          {t:"Squats 4×10 — try slightly deeper this week if pain-free (70–75°)", knee:true},
+          {t:"Lunges 4×14 — focus on the injured leg&#39;s control on descent", knee:true},
+          {t:"Stair walking 4×14 — try a slightly higher step if available", knee:true},
+          {t:"Single-leg balance (injured leg): 3×25s — use wall if needed", knee:false},
+          {t:"Glute bridges: 3×15 — strengthens the hip chain that supports the knee", knee:false},
+          {t:"Upper body: push/pull, 3 sets", knee:false},
+        ],
+        tip:"Glute weakness is a major hidden contributor to knee pain — if the glute doesn't fire properly, the knee absorbs the load it should be sharing. The bridges directly address this."
+      },
+      { name:"Wednesday", type:"swim", desc:"30 min · structured effort",
+        ex:[
+          {t:"Warm-up: 4 easy lengths", knee:false},
+          {t:"Main: 5 × 3 lengths front crawl, 45s rest — moderate pace", knee:false},
+          {t:"Optional: 2 lengths breaststroke to test knee response — stop if uncomfortable", knee:true},
+          {t:"Cool-down: 2 backstroke lengths", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Thursday", type:"rest", desc:"Active rest",
+        ex:[
+          {t:"Walk 15–20 min, flat route", knee:false},
+          {t:"Foam roll quads and IT band if available — relieves tension around the patella", knee:true},
+          {t:"Stretch: quads, calves, hip flexors", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Friday", type:"bike", desc:"35 min · rolling terrain",
+        ex:[
+          {t:"35 min, slightly more varied terrain", knee:false},
+          {t:"Include 1 extra small climb beyond the Kwakkenberg return", knee:false},
+          {t:"Observe: is the injured leg initiating the power stroke, or is the healthy leg compensating?", knee:true},
+          {t:"After ride: ice if knee is warm, stretch quads and calves", knee:false},
+        ],
+        tip:"If you notice hip rocking during climbs, the knee is compensating for weakness. Note it — tell your fysio at the week 2 check-in."
+      },
+      { name:"Saturday", type:"gym", desc:"35 min · repeat Tuesday",
+        ex:[
+          {t:"Squats 4×10 — match or slightly exceed Tuesday&#39;s depth", knee:true},
+          {t:"Lunges 4×14", knee:true},
+          {t:"Stair walking 4×14", knee:true},
+          {t:"Add: lateral band walk 3×12 each direction (ankle + hip stability)", knee:false},
+          {t:"Core: plank 3×25s, dead bug 3×10", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Sunday", type:"rest", desc:"Full rest — fysio check-in week",
+        ex:[{t:"Rest. Prepare questions for your fysio about how the knee responded this week.", knee:false}],
+        tip:"End of week 2: check in with your fysio. Show them the squat depth you&#39;ve reached and how the knee responded to cycling."
+      },
+    ]
+  },
+  {
+    week: 3, title: "Add intensity",
+    focus: "First real efforts on the bike. Resistance work in gym. Swim intervals.",
+    kwak: "The Kwakkenberg should start feeling routine. If it still takes a lot out of you, don&#39;t add intensity elsewhere — keep the rest steady.",
+    days: [
+      { name:"Monday", type:"bike", desc:"40 min · 2 climbs total",
+        ex:[
+          {t:"Plan a route with 2 climbs (including the Kwakkenberg return)", knee:false},
+          {t:"On the extra climb: stay seated, high cadence — actively resist standing", knee:true},
+          {t:"After ride: compare how both legs feel — note asymmetry", knee:false},
+          {t:"Stretch: quads 60s each side, calves 45s each side", knee:false},
+        ],
+        tip:"Seated climbing is dramatically less compressive on the patellofemoral joint than standing. You lose ~15% power but that&#39;s fine — power comes later."
+      },
+      { name:"Tuesday", type:"gym", desc:"45 min · resistance + single-leg press",
+        ex:[
+          {t:"Squats 4×10 — work toward 80–85° depth if pain-free", knee:true},
+          {t:"Lunges 4×14 — add a small dumbbell in each hand if bodyweight feels easy", knee:true},
+          {t:"Stair walking 4×14 — higher step (25–30 cm) if available", knee:true},
+          {t:"Single-leg press (injured leg): 3×10, very light — partial range (top half only)", knee:true},
+          {t:"Single-leg calf raise (injured, holding surface): 3×10", knee:false},
+          {t:"Balance board or BOSU: 3×30s each leg", knee:false},
+        ],
+        tip:"Single-leg press at partial range directly rebuilds the VMO (inner quad) that controls kneecap tracking. Start lighter than you think — form matters more than load at this stage."
+      },
+      { name:"Wednesday", type:"swim", desc:"30 min · intervals",
+        ex:[
+          {t:"Warm-up: 4 easy lengths", knee:false},
+          {t:"Main: 4 × 4 lengths at moderate effort, 90s rest between sets", knee:false},
+          {t:"Pull buoy set: 4 lengths hard effort (upper body only) — gives legs a break", knee:false},
+          {t:"Cool-down: 2 easy backstroke lengths", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Thursday", type:"rest", desc:"Full rest",
+        ex:[{t:"Full rest. Stretch if desired.", knee:false}],
+        tip:null
+      },
+      { name:"Friday", type:"bike", desc:"45 min · rolling, paced effort",
+        ex:[
+          {t:"45 min — rolling terrain, not just flat", knee:false},
+          {t:"Practice pacing: easier on first half, stronger on return", knee:false},
+          {t:"Benchmark: how does the knee feel at minute 35–40?", knee:true},
+          {t:"After ride: rate knee 1–10 for pain and fatigue separately in notes below", knee:true},
+        ],
+        tip:null
+      },
+      { name:"Saturday", type:"gym", desc:"40 min · repeat + more reps",
+        ex:[
+          {t:"Squats 4×12 (add 2 reps vs Tuesday if comfortable)", knee:true},
+          {t:"Lunges 4×14 — with light dumbbells if last week felt easy", knee:true},
+          {t:"Stair walking 4×14", knee:true},
+          {t:"Lateral band walk 3×15 each direction", knee:false},
+          {t:"Finish: 10 min stretching — quads, hamstrings, calves, hip flexors", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Sunday", type:"rest", desc:"Full rest",
+        ex:[{t:"Rest.", knee:false}],
+        tip:null
+      },
+    ]
+  },
+  {
+    week: 4, title: "Consolidate",
+    focus: "Benchmark week. Assess what the knee and leg can do.",
+    kwak: "By now the Kwakkenberg should feel like normal cycling, not a challenge. If not — that&#39;s useful data. Repeat weeks 3–4 before progressing.",
+    days: [
+      { name:"Monday", type:"bike", desc:"45–50 min · comfortable rolling",
+        ex:[
+          {t:"45–50 min, moderate effort throughout", knee:false},
+          {t:"Include the Kwakkenberg and at least one other climb", knee:false},
+          {t:"Actively try to equalize effort between legs on climbs", knee:true},
+          {t:"Can you maintain conversation pace? (breathless but speaking = right zone)", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Tuesday", type:"gym", desc:"45 min · increased load",
+        ex:[
+          {t:"Squats 4×12 — add load (light dumbbells or barbell) if bodyweight feels easy", knee:true},
+          {t:"Lunges 4×14 — with dumbbells, controlled descent", knee:true},
+          {t:"Stair walking 4×14 — highest available step", knee:true},
+          {t:"Single-leg press (injured): increase weight if last week felt manageable", knee:true},
+          {t:"Single-leg calf raise (no support if stable): 3×12", knee:false},
+          {t:"Step-ups (25–30 cm): 3×10 each leg", knee:true},
+        ],
+        tip:"Single-leg calf raise without holding a surface is a significant milestone for a healed lower leg. Only attempt if the fysio has cleared it."
+      },
+      { name:"Wednesday", type:"swim", desc:"35 min · continuous or intervals",
+        ex:[
+          {t:"Option A (tired): 35 min easy continuous, any stroke", knee:false},
+          {t:"Option B (feeling good): 3 × 8 lengths moderate-hard, 2 min rest", knee:false},
+          {t:"Try breaststroke for 4 lengths if you haven&#39;t — note how the knee responds", knee:true},
+          {t:"Cool-down: 4 easy lengths", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Thursday", type:"rest", desc:"Rest — save legs for Friday",
+        ex:[{t:"Full rest. Stretch lightly if desired. Don't skip this — Friday is your benchmark.", knee:false}],
+        tip:null
+      },
+      { name:"Friday", type:"bike", desc:"50–60 min · benchmark ride ★",
+        ex:[
+          {t:"50–60 min at a pace that feels genuinely challenging", knee:false},
+          {t:"Include at least 2 proper climbs", knee:false},
+          {t:"After ride: rate knee 1–10 for strength, pain, fatigue — separately", knee:true},
+          {t:"Note what you could and couldn&#39;t do — this shapes your week 5+ plan", knee:false},
+        ],
+        tip:"Good benchmark result: the knee fatigues but doesn't hurt sharply, you're not heavily compensating, and the Kwakkenberg felt like exercise — not a wall."
+      },
+      { name:"Saturday", type:"gym", desc:"40 min · full lower body benchmark",
+        ex:[
+          {t:"Full lower body at working weight — squats, lunges, step-ups, calf raises", knee:true},
+          {t:"3 sets of each at a weight that feels like real effort by rep 10–12", knee:false},
+          {t:"Compare: how does the injured leg feel vs week 1?", knee:false},
+          {t:"Finish: 10 min full stretch", knee:false},
+        ],
+        tip:null
+      },
+      { name:"Sunday", type:"rest", desc:"Reflect on 4 weeks",
+        ex:[
+          {t:"Rest completely.", knee:false},
+          {t:"Review notes from the past 4 weeks — what improved most?", knee:false},
+          {t:"What's still lagging — knee strength, endurance, the climb?", knee:false},
+          {t:"Discuss with your fysio before starting week 5", knee:false},
+        ],
+        tip:"After 4 weeks at a modest calorie deficit + 4 training sessions/week, expect ~2 kg lost. Muscle is being built simultaneously, so the scale may understate real fat loss. Go by how clothes fit."
+      },
+    ]
+  }
+];
+
+// STATE
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+
+let activeWeek = 0;
+let activePage = 'training';
+
+function showPage(p) {
+  activePage = p;
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && p === 'training') || (i === 1 && p === 'nutrition'));
+  });
+}
+
+function typeEmoji(t) {
+  return t === 'bike' ? '🚴' : t === 'swim' ? '🏊' : t === 'gym' ? '💪' : '○';
+}
+
+function doneCount(wi) {
+  return plan[wi].days.filter((d, di) => state[`w${wi}d${di}`]?.done && d.type !== 'rest').length;
+}
+function activeCount(wi) {
+  return plan[wi].days.filter(d => d.type !== 'rest').length;
+}
+
+function renderWeekScroll() {
+  document.getElementById('weekScroll').innerHTML = plan.map((w, i) =>
+    `<button class="week-btn ${i === activeWeek ? 'active' : ''}" onclick="switchWeek(${i})">
+      Week ${i+1} <span style="opacity:0.6;font-size:11px">${doneCount(i)}/${activeCount(i)}</span>
+    </button>`
+  ).join('');
+}
+
+function renderWeek(wi) {
+  const w = plan[wi];
+  const done = doneCount(wi);
+  const total = activeCount(wi);
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+
+  const daysHTML = w.days.map((day, di) => {
+    const sk = `w${wi}d${di}`;
+    const isDone = state[sk]?.done;
+    const isOpen = state[sk]?.open;
+    const note = state[sk]?.note || '';
+
+    const exHTML = day.ex.map(e =>
+      `<div class="ex-item">
+        <div class="ex-dot"></div>
+        <div>${e.t}${e.knee ? '<span class="knee-tag">knee</span>' : ''}</div>
+      </div>`
+    ).join('');
+
+    const tipHTML = day.tip ? `<div class="section"><div class="tip-box"><strong>Tip:</strong> ${day.tip}</div></div>` : '';
+
+    return `<div class="day-card ${isDone ? 'done' : ''}" id="card${wi}${di}">
+      <div class="day-header ${isOpen ? 'open' : ''}" onclick="toggleDetail(${wi},${di})">
+        <div class="day-icon icon-${day.type}">${typeEmoji(day.type)}</div>
+        <div class="day-meta">
+          <div class="day-name">${day.name}</div>
+          <div class="day-desc">${day.desc}</div>
+        </div>
+        <button class="check-btn ${isDone ? 'checked' : ''}" onclick="toggleDone(event,${wi},${di})">✓</button>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="day-detail ${isOpen ? 'open' : ''}" id="det${wi}${di}">
+        <div class="section">
+          <div class="section-label">Session</div>
+          ${exHTML}
+        </div>
+        ${tipHTML}
+        <div class="section">
+          <div class="section-label">My notes</div>
+          <textarea placeholder="How did it go? Knee pain (1–10), energy, observations…" onchange="saveNote(${wi},${di},this.value)" oninput="saveNote(${wi},${di},this.value)">${note}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const wNote = state[`wnote${wi}`] || '';
+
+  document.getElementById('weekArea').innerHTML = `
+    <div class="week-hero">
+      <div class="week-title">Week ${wi+1} — ${w.title}</div>
+      <div class="week-focus">${w.focus}</div>
+      <div class="progress-row">
+        <div class="progress-bar"><div class="progress-fill" id="prog${wi}" style="width:${pct}%"></div></div>
+        <div class="progress-label">${done}/${total}</div>
+      </div>
+    </div>
+    <div class="kwak-banner"><strong>Kwakkenberg:</strong> ${w.kwak}</div>
+    <div class="days-list">${daysHTML}</div>
+    <div class="reflection-section">
+      <div class="reflection-label">Week ${wi+1} reflection</div>
+      <textarea placeholder="Overall notes — what improved, what to tell the fysio, weight update…" onchange="saveWNote(${wi},this.value)" oninput="saveWNote(${wi},this.value)">${wNote}</textarea>
+    </div>
+    <div class="bottom-space"></div>`;
+}
+
+function switchWeek(i) {
+  activeWeek = i;
+  renderWeekScroll();
+  renderWeek(i);
+}
+
+function toggleDetail(wi, di) {
+  const sk = `w${wi}d${di}`;
+  if (!state[sk]) state[sk] = {};
+  state[sk].open = !state[sk].open;
+  save();
+  const det = document.getElementById(`det${wi}${di}`);
+  const hdr = det.previousElementSibling;
+  det.classList.toggle('open', state[sk].open);
+  hdr.classList.toggle('open', state[sk].open);
+}
+
+function toggleDone(e, wi, di) {
+  e.stopPropagation();
+  const sk = `w${wi}d${di}`;
+  if (!state[sk]) state[sk] = {};
+  state[sk].done = !state[sk].done;
+  save();
+  const card = document.getElementById(`card${wi}${di}`);
+  card.classList.toggle('done', state[sk].done);
+  card.querySelector('.check-btn').classList.toggle('checked', state[sk].done);
+  const done = doneCount(wi);
+  const total = activeCount(wi);
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const prog = document.getElementById(`prog${wi}`);
+  if (prog) prog.style.width = pct + '%';
+  renderWeekScroll();
+}
+
+function saveNote(wi, di, v) {
+  const sk = `w${wi}d${di}`;
+  if (!state[sk]) state[sk] = {};
+  state[sk].note = v;
+  save();
+}
+function saveWNote(wi, v) {
+  state[`wnote${wi}`] = v;
+  save();
+}
+
+// Swap cards
+function renderSwaps() {
+  document.getElementById('swapCards').innerHTML = swaps.map((s, i) => {
+    const rowsHTML = s.items.map(r =>
+      `<div class="swap-row">
+        <div class="swap-from">${r[0]}</div>
+        <div class="swap-arrow">→</div>
+        <div class="swap-to">${r[2]}</div>
+      </div>`
+    ).join('');
+    return `<div class="swap-card" style="margin:0 20px 9px">
+      <div class="swap-header" onclick="toggleSwap(${i})">
+        <div class="swap-icon">${s.icon}</div>
+        <div class="swap-title">${s.title}</div>
+        <div class="swap-impact ${s.impact === 'high' ? 'impact-high' : 'impact-med'}">${s.impact === 'high' ? 'high impact' : 'medium'}</div>
+        <div class="chevron" id="swchev${i}">▾</div>
+      </div>
+      <div class="swap-detail" id="swap${i}">
+        <div style="padding-top:12px">${rowsHTML}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSwap(i) {
+  const el = document.getElementById(`swap${i}`);
+  const ch = document.getElementById(`swchev${i}`);
+  const open = el.classList.toggle('open');
+  ch.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+renderWeekScroll();
+renderWeek(0);
+renderSwaps();
+</script>
+</body>
+</html>
