@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nutrition Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #F7F4EE;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --card2: #F2EFE8;
+  --border: rgba(0,0,0,0.08);
+  --border-md: rgba(0,0,0,0.14);
+  --text: #1C1C1A;
+  --text-muted: #6B6B60;
+  --text-hint: #A8A89A;
+  --accent: #2D6A2A;
+  --accent-light: #EBF3E8;
+  --accent-mid: #7eb87a;
+  --warn: #B84C1A;
+  --warn-light: #FDF0EA;
+  --info: #1A4A7A;
+  --info-light: #EAF0F8;
+  --gold: #8B6914;
+  --gold-light: #FBF5E6;
+  --r: 16px;
+  --r-sm: 10px;
+}
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.nav-bar {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-tab {
+  flex: 1;
+  padding: 13px 4px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-hint);
+  text-align: center;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* HEADER */
+.page-header {
+  background: var(--surface);
+  padding: 22px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.page-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  font-weight: 300;
+}
+
+/* MACRO CARDS */
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+  padding: 16px 20px 0;
+}
+.macro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+}
+.macro-card.full { grid-column: 1 / -1; }
+.macro-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-hint);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.macro-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+.macro-unit {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  margin-left: 2px;
+}
+.macro-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.macro-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.macro-bar-fill { height: 100%; border-radius: 2px; }
+.bar-kcal { background: var(--accent); }
+.bar-protein { background: #1A4A7A; }
+.bar-carb { background: #8B6914; }
+.bar-fat { background: #B84C1A; }
+
+/* SECTIONS */
+.section {
+  padding: 20px 20px 0;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: -0.2px;
+}
+
+/* INFO CARDS */
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.info-card h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.info-card p, .info-card li {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.info-card ul { padding-left: 16px; }
+.info-card li { margin-bottom: 4px; }
+.info-card.warn { background: var(--warn-light); border-color: rgba(184,76,26,0.2); }
+.info-card.warn h4 { color: var(--warn); }
+.info-card.good { background: var(--accent-light); border-color: rgba(45,106,42,0.2); }
+.info-card.good h4 { color: var(--accent); }
+.info-card.info { background: var(--info-light); border-color: rgba(26,74,122,0.2); }
+.info-card.info h4 { color: var(--info); }
+.info-card.gold { background: var(--gold-light); border-color: rgba(139,105,20,0.2); }
+.info-card.gold h4 { color: var(--gold); }
+
+/* MEAL PLAN */
+.meal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.meal-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--card2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.meal-meta { flex: 1; }
+.meal-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.meal-macros { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.meal-chevron { font-size: 10px; color: var(--text-hint); transition: transform 0.2s; }
+.meal-header.open .meal-chevron { transform: rotate(180deg); }
+.meal-detail {
+  display: none;
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--border);
+}
+.meal-detail.open { display: block; }
+.food-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  gap: 8px;
+}
+.food-row:last-child { border-bottom: none; }
+.food-name { color: var(--text); flex: 1; }
+.food-amount { color: var(--text-muted); white-space: nowrap; }
+.food-kcal { color: var(--accent); font-weight: 500; white-space: nowrap; min-width: 50px; text-align: right; }
+.meal-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+.meal-total span { color: var(--accent); }
+
+/* TRACKER PAGE */
+.tracker-header {
+  padding: 16px 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tracker-date {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+}
+.tracker-nav { display: flex; gap: 8px; }
+.tracker-nav button {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-md);
+  background: var(--surface);
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.day-summary {
+  margin: 12px 20px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.summary-stat { text-align: center; flex: 1; }
+.summary-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+}
+.summary-val.over { color: var(--warn); }
+.summary-lbl { font-size: 10px; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.summary-divider { width: 1px; background: var(--border); margin: 0 8px; }
+.total-bar-wrap { margin-top: 4px; }
+.total-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.total-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; max-width: 100%; }
+.total-bar-fill.over { background: var(--warn); }
+.total-bar-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-align: right; }
+
+/* FOOD LOG */
+.log-section { padding: 14px 20px 0; }
+.log-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.log-section-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-hint);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.add-btn {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: none;
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.log-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.log-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.log-item-name { flex: 1; font-size: 13px; color: var(--text); }
+.log-item-detail { font-size: 12px; color: var(--text-muted); }
+.log-item-kcal { font-size: 13px; font-weight: 500; color: var(--accent); min-width: 44px; text-align: right; }
+.log-item-del {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-md);
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-hint);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.empty-log {
+  font-size: 13px;
+  color: var(--text-hint);
+  text-align: center;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px dashed var(--border-md);
+  border-radius: var(--r-sm);
+}
+
+/* ADD FOOD MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+.modal input, .modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  margin-bottom: 10px;
+  outline: none;
+}
+.modal input:focus, .modal select:focus { border-color: var(--accent-mid); }
+.modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.modal-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.modal-cancel {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+/* QUICK ADD */
+.quick-foods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.quick-food {
+  font-size: 12px;
+  padding: 5px 10px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--text);
+}
+.quick-food:active { background: var(--accent-light); }
+
+/* NOTES */
+.day-notes {
+  margin: 12px 20px 0;
+}
+.day-notes textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  resize: none;
+  min-height: 60px;
+  outline: none;
+}
+.day-notes textarea::placeholder { color: var(--text-hint); }
+.day-notes-label {
+  font-size: 11px;
+  color: var(--text-hint);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.bottom-space { height: 50px; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <div class="nav-tab active" onclick="showPage('guide')">Guide</div>
+  <div class="nav-tab" onclick="showPage('meals')">Meal ideas</div>
+  <div class="nav-tab" onclick="showPage('tracker')">Daily log</div>
+</div>
+
+<!-- ===== GUIDE PAGE ===== -->
+<div class="page active" id="page-guide">
+  <div class="page-header">
+    <h1>Your nutrition plan</h1>
+    <p>1.93m · 100 kg · target 90 kg · 4 training days/week</p>
+  </div>
+
+  <div class="macro-grid">
+    <div class="macro-card full">
+      <div class="macro-label">Daily calorie target</div>
+      <div class="macro-value">2150<span class="macro-unit">kcal</span></div>
+      <div class="macro-sub">500 kcal below maintenance (~2650) · ~0.5 kg loss per week</div>
+      <div class="macro-bar"><div class="macro-bar-fill bar-kcal" style="width:81%"></div></div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Protein</div>
+      <div class="macro-value">155<span class="macro-unit">g</span></div>
+      <div class="macro-sub">620 kcal · 29%<br>Preserves muscle while losing fat</div>
+      <div class="macro-bar"><div class="macro-bar-fill bar-protein" style="width:100%"></div></div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Carbohydrates</div>
+      <div class="macro-value">210<span class="macro-unit">g</span></div>
+      <div class="macro-sub">840 kcal · 39%<br>Fuel for training days</div>
+      <div class="macro-bar"><div class="macro-bar-fill bar-carb" style="width:100%"></div></div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Fat</div>
+      <div class="macro-value">76<span class="macro-unit">g</span></div>
+      <div class="macro-sub">684 kcal · 32%<br>Hormones &amp; satiety</div>
+      <div class="macro-bar"><div class="macro-bar-fill bar-fat" style="width:100%"></div></div>
+    </div>
+    <div class="macro-card full">
+      <div class="macro-label">On training days — eat 200 kcal more</div>
+      <div class="macro-value">2350<span class="macro-unit">kcal</span></div>
+      <div class="macro-sub">Add the extra as carbs before or after training. Cycling and swimming burn 400–500 kcal per session.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Why you&#39;re gaining weight skipping breakfast</div>
+    <div class="info-card warn">
+      <h4>Skipping breakfast is working against you</h4>
+      <p>When you skip breakfast, you arrive at lunch in a mild blood sugar deficit. This triggers cravings for fast-digesting carbs (bread, fries, snacks) and makes portion control much harder. Studies consistently show that breakfast skippers consume more total calories across the day, not fewer — the body overcompensates at later meals. For fat loss, regular meals spread across the day produce better results than skipping.</p>
+    </div>
+    <div class="info-card good">
+      <h4>What breakfast should look like</h4>
+      <p>High protein, moderate carbs, some fat. Target 400–500 kcal with at least 30g protein. This suppresses hunger hormones for 4–5 hours and sets a stable blood sugar baseline for the rest of the day. Examples: eggs with wholegrain toast, Greek yoghurt with oats and fruit, cottage cheese with bread and tomato.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The rules that matter most</div>
+    <div class="info-card gold">
+      <h4>1. Protein at every meal — non-negotiable</h4>
+      <p>At 155g/day, spread across 3 meals that&#39;s ~50g per meal. Protein is the most satiating macro — it keeps you full longest and directly protects the muscle you&#39;re building in the gym. Every meal must have a clear protein source on the plate before anything else is added.</p>
+    </div>
+    <div class="info-card gold">
+      <h4>2. Carbs around training, not in the evening</h4>
+      <p>Carbs are fuel. Eat the bulk of your carbs at breakfast and in the meal before or after training. In the evening — especially on rest days — shift toward protein and vegetables, fewer carbs. This alone can remove 200–300 kcal from your day without feeling like a sacrifice.</p>
+    </div>
+    <div class="info-card gold">
+      <h4>3. Takeaway has a budget, not a ban</h4>
+      <p>You don&#39;t need to stop eating takeaway. Budget it: 2 takeaway meals per week maximum, and choose wisely. Grilled over fried, rice or wrap over fries, avoid creamy sauces. A grilled chicken wrap with salad is ~600 kcal. A burger meal with fries is ~1200 kcal. Same satisfaction, very different outcome.</p>
+    </div>
+    <div class="info-card gold">
+      <h4>4. Vegetables fill the plate first</h4>
+      <p>Before adding protein and carbs to your plate, fill half of it with vegetables. This adds volume and fibre with almost zero calories, dramatically slowing digestion and extending satiety. You will feel more full on fewer total calories.</p>
+    </div>
+    <div class="info-card gold">
+      <h4>5. Snacking is fine — if it&#39;s protein or fibre</h4>
+      <p>Snacking is not the problem — what you snack on is. A handful of crisps is 150 kcal of refined fat with no satiety. 200g Greek yoghurt is 120 kcal with 20g protein and keeps you full for 2 hours. Approved snacks: Greek yoghurt, cottage cheese, boiled eggs, handful of nuts (small portion), apple with peanut butter, raw vegetables with hummus.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The breakfast problem — solved</div>
+    <div class="info-card info">
+      <h4>Why you&#39;ve been skipping it</h4>
+      <p>Most people skip breakfast because they&#39;re not hungry in the morning. This is often because dinner was too large and too late, keeping insulin elevated overnight. The fix: eat a lighter dinner (stop at 70% full), eat dinner earlier if possible, and within a week morning hunger returns naturally.</p>
+    </div>
+    <div class="info-card info">
+      <h4>If you genuinely have no time</h4>
+      <p>Prep the night before: overnight oats take 3 minutes, are ready in the morning, and deliver 400 kcal and 25–30g protein. Alternatively: 200g Greek yoghurt + a banana + a handful of nuts eaten at your desk takes 90 seconds and no cooking.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Realistic timeline</div>
+    <div class="info-card">
+      <h4>What to expect</h4>
+      <ul>
+        <li><strong>Week 1–2:</strong> 1–2 kg loss, mostly water weight from reduced carb intake. Scale drops fast — don&#39;t be fooled, it&#39;s not all fat.</li>
+        <li><strong>Week 3–8:</strong> 0.4–0.6 kg per week of actual fat loss. Muscle is building simultaneously so the scale may stall even as you get leaner — go by how clothes fit.</li>
+        <li><strong>Month 3–4:</strong> 8–10 kg down from start. Knee will be noticeably easier to manage at lower body weight.</li>
+        <li><strong>Don&#39;t crash diet:</strong> Going below 1800 kcal at your size risks muscle loss, fatigue, and slowing your metabolism. 2150 is the floor.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tracking tips</div>
+    <div class="info-card">
+      <h4>Use the daily log tab</h4>
+      <p>Log everything you eat — including the small things. Research shows that people who track consistently lose 2× more weight than those who don&#39;t, even eating the same foods. You don&#39;t need to be perfect every day — aim for 5 out of 7 days tracked accurately.</p>
+    </div>
+    <div class="info-card">
+      <h4>Apps to use alongside this</h4>
+      <p><strong>MyFitnessPal</strong> or <strong>Cronometer</strong> have full food databases with Dutch products included. Scan barcodes directly. Use them for looking up exact macros, then log the summary here. Cronometer is more accurate for micronutrients; MyFitnessPal has a bigger food library.</p>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ===== MEALS PAGE ===== -->
+<div class="page" id="page-meals">
+  <div class="page-header">
+    <h1>Meal ideas</h1>
+    <p>High protein · practical · suited to your targets</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Breakfast (~450 kcal, 35g protein)</div>
+    <div id="breakfastMeals"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Lunch (~550 kcal, 45g protein)</div>
+    <div id="lunchMeals"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Dinner (~700 kcal, 50g protein)</div>
+    <div id="dinnerMeals"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Snacks (~150 kcal, 15g protein)</div>
+    <div id="snackMeals"></div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ===== TRACKER PAGE ===== -->
+<div class="page" id="page-tracker">
+  <div class="tracker-header">
+    <div class="tracker-date" id="trackerDate"></div>
+    <div class="tracker-nav">
+      <button onclick="changeDay(-1)">‹</button>
+      <button onclick="changeDay(1)">›</button>
+    </div>
+  </div>
+
+  <div class="day-summary">
+    <div class="summary-row">
+      <div class="summary-stat">
+        <div class="summary-val" id="sumKcal">0</div>
+        <div class="summary-lbl">kcal eaten</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="summary-val" id="sumRemain">2150</div>
+        <div class="summary-lbl">remaining</div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-stat">
+        <div class="summary-val" id="sumProtein">0</div>
+        <div class="summary-lbl">protein g</div>
+      </div>
+    </div>
+    <div class="total-bar-wrap">
+      <div class="total-bar">
+        <div class="total-bar-fill" id="kcalBar" style="width:0%"></div>
+      </div>
+      <div class="total-bar-label" id="kcalBarLabel">0 / 2150 kcal</div>
+    </div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-section-header">
+      <div class="log-section-title">Breakfast</div>
+      <button class="add-btn" onclick="openModal('Breakfast')">+ Add</button>
+    </div>
+    <div class="log-items" id="log-Breakfast"></div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-section-header">
+      <div class="log-section-title">Lunch</div>
+      <button class="add-btn" onclick="openModal('Lunch')">+ Add</button>
+    </div>
+    <div class="log-items" id="log-Lunch"></div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-section-header">
+      <div class="log-section-title">Dinner</div>
+      <button class="add-btn" onclick="openModal('Dinner')">+ Add</button>
+    </div>
+    <div class="log-items" id="log-Dinner"></div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-section-header">
+      <div class="log-section-title">Snacks</div>
+      <button class="add-btn" onclick="openModal('Snacks')">+ Add</button>
+    </div>
+    <div class="log-items" id="log-Snacks"></div>
+  </div>
+
+  <div class="day-notes">
+    <div class="day-notes-label">Day notes</div>
+    <textarea id="dayNotes" placeholder="How did eating go today? Cravings, energy, takeaway..." oninput="saveNotes(this.value)"></textarea>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+<!-- ADD FOOD MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalIfOutside(event)">
+  <div class="modal">
+    <h3>Add food — <span id="modalMealLabel"></span></h3>
+    <div class="quick-foods" id="quickFoods"></div>
+    <input type="text" id="foodName" placeholder="Food name (e.g. chicken breast)" autocomplete="off">
+    <div class="modal-row">
+      <input type="number" id="foodKcal" placeholder="kcal" min="0" max="3000">
+      <input type="number" id="foodProtein" placeholder="protein (g)" min="0" max="200">
+    </div>
+    <input type="number" id="foodAmount" placeholder="Amount / portion (g or ml, optional)" min="0">
+    <button class="modal-btn" onclick="addFood()">Add to log</button>
+    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const NUTR_KEY = 'nutr_guide_v1';
+const TARGET_KCAL = 2150;
+const TARGET_PROTEIN = 155;
+
+// ===== MEAL IDEAS DATA =====
+const meals = {
+  breakfast: [
+    {
+      name: "Eggs &amp; wholegrain toast",
+      kcal: 440, protein: 34,
+      foods: [
+        {name:"3 eggs scrambled", amount:"150g", kcal:210},
+        {name:"Wholegrain bread", amount:"2 slices (80g)", kcal:160},
+        {name:"Olive oil (cooking)", amount:"5ml", kcal:40},
+        {name:"Tomato", amount:"1 medium", kcal:30},
+      ]
+    },
+    {
+      name: "Greek yoghurt with oats &amp; banana",
+      kcal: 460, protein: 32,
+      foods: [
+        {name:"Greek yoghurt (full fat)", amount:"250g", kcal:200},
+        {name:"Rolled oats", amount:"50g dry", kcal:180},
+        {name:"Banana", amount:"1 medium", kcal:90},
+        {name:"Honey", amount:"1 tsp", kcal:20},
+        {name:"Handful of nuts", amount:"15g", kcal:90},
+      ]
+    },
+    {
+      name: "Cottage cheese &amp; bread",
+      kcal: 420, protein: 38,
+      foods: [
+        {name:"Cottage cheese", amount:"250g", kcal:210},
+        {name:"Wholegrain bread", amount:"2 slices (80g)", kcal:160},
+        {name:"Cucumber &amp; tomato", amount:"100g", kcal:20},
+        {name:"Olive oil drizzle", amount:"5ml", kcal:40},
+      ]
+    },
+    {
+      name: "Overnight oats (prep night before)",
+      kcal: 470, protein: 30,
+      foods: [
+        {name:"Rolled oats", amount:"70g", kcal:250},
+        {name:"Greek yoghurt", amount:"150g", kcal:120},
+        {name:"Milk (semi-skimmed)", amount:"100ml", kcal:46},
+        {name:"Berries (frozen)", amount:"80g", kcal:30},
+        {name:"Chia seeds", amount:"10g", kcal:48},
+      ]
+    },
+  ],
+  lunch: [
+    {
+      name: "Chicken &amp; rice bowl",
+      kcal: 560, protein: 48,
+      foods: [
+        {name:"Chicken breast grilled", amount:"180g", kcal:270},
+        {name:"Brown rice (cooked)", amount:"200g", kcal:220},
+        {name:"Mixed vegetables stir-fried", amount:"150g", kcal:60},
+        {name:"Soy sauce / seasoning", amount:"15ml", kcal:10},
+      ]
+    },
+    {
+      name: "Tuna wrap",
+      kcal: 530, protein: 46,
+      foods: [
+        {name:"Canned tuna in water", amount:"2 cans (160g drained)", kcal:160},
+        {name:"Wholegrain wrap", amount:"1 large (60g)", kcal:160},
+        {name:"Greek yoghurt (instead of mayo)", amount:"50g", kcal:40},
+        {name:"Lettuce, tomato, cucumber", amount:"100g", kcal:20},
+        {name:"Wholegrain bread side", amount:"1 slice", kcal:80},
+        {name:"Apple", amount:"1 medium", kcal:80},
+      ]
+    },
+    {
+      name: "Salmon with potatoes &amp; veg",
+      kcal: 580, protein: 44,
+      foods: [
+        {name:"Salmon fillet baked", amount:"160g", kcal:290},
+        {name:"Boiled potatoes", amount:"200g", kcal:170},
+        {name:"Broccoli / green beans", amount:"200g", kcal:60},
+        {name:"Olive oil", amount:"10ml", kcal:80},
+      ]
+    },
+    {
+      name: "Lentil soup with bread",
+      kcal: 520, protein: 32,
+      foods: [
+        {name:"Red lentil soup (homemade)", amount:"400ml", kcal:320},
+        {name:"Wholegrain bread", amount:"2 slices", kcal:160},
+        {name:"Greek yoghurt dollop", amount:"50g", kcal:40},
+      ]
+    },
+  ],
+  dinner: [
+    {
+      name: "Steak with roasted veg &amp; sweet potato",
+      kcal: 680, protein: 52,
+      foods: [
+        {name:"Lean beef steak (sirloin)", amount:"200g", kcal:340},
+        {name:"Sweet potato roasted", amount:"200g", kcal:180},
+        {name:"Mixed roasted vegetables", amount:"200g", kcal:100},
+        {name:"Olive oil", amount:"10ml", kcal:80},
+      ]
+    },
+    {
+      name: "Pasta bolognese (lean mince)",
+      kcal: 710, protein: 50,
+      foods: [
+        {name:"Lean beef mince (5% fat)", amount:"200g", kcal:280},
+        {name:"Wholegrain pasta cooked", amount:"220g", kcal:290},
+        {name:"Tomato passata &amp; onion", amount:"200g", kcal:80},
+        {name:"Parmesan", amount:"20g", kcal:80},
+      ]
+    },
+    {
+      name: "Grilled chicken thighs with rice",
+      kcal: 690, protein: 55,
+      foods: [
+        {name:"Chicken thighs (skin off)", amount:"250g", kcal:310},
+        {name:"Basmati rice cooked", amount:"200g", kcal:250},
+        {name:"Salad with dressing", amount:"150g + 15ml", kcal:80},
+        {name:"Lemon / herbs", amount:"seasoning", kcal:10},
+      ]
+    },
+    {
+      name: "Salmon stir-fry with noodles",
+      kcal: 660, protein: 46,
+      foods: [
+        {name:"Salmon fillet", amount:"180g", kcal:320},
+        {name:"Soba noodles cooked", amount:"200g", kcal:220},
+        {name:"Pak choi, pepper, broccoli", amount:"200g", kcal:60},
+        {name:"Sesame oil + soy sauce", amount:"15ml", kcal:60},
+      ]
+    },
+  ],
+  snacks: [
+    {
+      name: "Greek yoghurt",
+      kcal: 120, protein: 17,
+      foods: [{name:"Greek yoghurt full fat", amount:"200g", kcal:120}]
+    },
+    {
+      name: "Boiled eggs",
+      kcal: 140, protein: 18,
+      foods: [{name:"Boiled eggs", amount:"2 large", kcal:140}]
+    },
+    {
+      name: "Cottage cheese &amp; rice cake",
+      kcal: 150, protein: 16,
+      foods: [
+        {name:"Cottage cheese", amount:"100g", kcal:80},
+        {name:"Rice cakes", amount:"2 cakes", kcal:70},
+      ]
+    },
+    {
+      name: "Apple &amp; peanut butter",
+      kcal: 180, protein: 5,
+      foods: [
+        {name:"Apple", amount:"1 medium", kcal:80},
+        {name:"Peanut butter", amount:"1 tbsp (15g)", kcal:100},
+      ]
+    },
+  ]
+};
+
+function renderMeals() {
+  const sections = [
+    {id:'breakfastMeals', data:meals.breakfast},
+    {id:'lunchMeals', data:meals.lunch},
+    {id:'dinnerMeals', data:meals.dinner},
+    {id:'snackMeals', data:meals.snacks},
+  ];
+  sections.forEach(s => {
+    document.getElementById(s.id).innerHTML = s.data.map((m, i) => {
+      const id = `meal_${s.id}_${i}`;
+      const foodsHTML = m.foods.map(f =>
+        `<div class="food-row">
+          <div class="food-name">${f.name}</div>
+          <div class="food-amount">${f.amount}</div>
+          <div class="food-kcal">${f.kcal} kcal</div>
+        </div>`
+      ).join('');
+      return `<div class="meal-card">
+        <div class="meal-header" onclick="toggleMeal('${id}')">
+          <div class="meal-icon">${getMealIcon(s.id)}</div>
+          <div class="meal-meta">
+            <div class="meal-name">${m.name}</div>
+            <div class="meal-macros">${m.kcal} kcal &nbsp;·&nbsp; ${m.protein}g protein</div>
+          </div>
+          <div class="meal-chevron">▾</div>
+        </div>
+        <div class="meal-detail" id="${id}">
+          ${foodsHTML}
+          <div class="meal-total">
+            <span>Total: ${m.kcal} kcal</span>
+            <span>${m.protein}g protein</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+function getMealIcon(sectionId) {
+  if (sectionId.includes('breakfast')) return '🌅';
+  if (sectionId.includes('lunch')) return '☀️';
+  if (sectionId.includes('dinner')) return '🌙';
+  return '🍎';
+}
+
+function toggleMeal(id) {
+  const el = document.getElementById(id);
+  const hdr = el.previousElementSibling;
+  el.classList.toggle('open');
+  hdr.classList.toggle('open');
+}
+
+// ===== TRACKER =====
+let currentDate = new Date();
+currentDate.setHours(0,0,0,0);
+let trackerData = {};
+
+try { trackerData = JSON.parse(localStorage.getItem(NUTR_KEY)) || {}; } catch(e) {}
+function saveTracker() { try { localStorage.setItem(NUTR_KEY, JSON.stringify(trackerData)); } catch(e) {} }
+
+function dateKey(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function formatDate(d) {
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.round((d - today) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === -1) return 'Yesterday';
+  if (diff === 1) return 'Tomorrow';
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+}
+
+function changeDay(dir) {
+  currentDate = new Date(currentDate.getTime() + dir * 86400000);
+  renderTracker();
+}
+
+let currentMeal = '';
+
+const quickFoodOptions = [
+  {name:'Chicken breast 100g', kcal:150, protein:31},
+  {name:'Brown rice 100g cooked', kcal:110, protein:3},
+  {name:'Egg', kcal:70, protein:6},
+  {name:'Greek yoghurt 200g', kcal:120, protein:17},
+  {name:'Salmon 100g', kcal:180, protein:20},
+  {name:'Banana', kcal:90, protein:1},
+  {name:'Wholegrain bread slice', kcal:80, protein:4},
+  {name:'Cottage cheese 100g', kcal:80, protein:11},
+];
+
+function openModal(meal) {
+  currentMeal = meal;
+  document.getElementById('modalMealLabel').textContent = meal;
+  document.getElementById('foodName').value = '';
+  document.getElementById('foodKcal').value = '';
+  document.getElementById('foodProtein').value = '';
+  document.getElementById('foodAmount').value = '';
+  document.getElementById('quickFoods').innerHTML = quickFoodOptions.map((q,i) =>
+    `<div class="quick-food" onclick="quickAdd(${i})">${q.name}</div>`
+  ).join('');
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('foodName').focus(), 100);
+}
+
+function quickAdd(i) {
+  const q = quickFoodOptions[i];
+  document.getElementById('foodName').value = q.name;
+  document.getElementById('foodKcal').value = q.kcal;
+  document.getElementById('foodProtein').value = q.protein;
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalIfOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function addFood() {
+  const name = document.getElementById('foodName').value.trim();
+  const kcal = parseInt(document.getElementById('foodKcal').value) || 0;
+  const protein = parseInt(document.getElementById('foodProtein').value) || 0;
+  const amount = document.getElementById('foodAmount').value.trim();
+  if (!name) return;
+
+  const dk = dateKey(currentDate);
+  if (!trackerData[dk]) trackerData[dk] = {meals:{Breakfast:[],Lunch:[],Dinner:[],Snacks:[]}, notes:''};
+  if (!trackerData[dk].meals[currentMeal]) trackerData[dk].meals[currentMeal] = [];
+  trackerData[dk].meals[currentMeal].push({name, kcal, protein, amount, id: Date.now()});
+  saveTracker();
+  closeModal();
+  renderTracker();
+}
+
+function deleteFood(meal, id) {
+  const dk = dateKey(currentDate);
+  if (!trackerData[dk]) return;
+  trackerData[dk].meals[meal] = trackerData[dk].meals[meal].filter(f => f.id !== id);
+  saveTracker();
+  renderTracker();
+}
+
+function saveNotes(val) {
+  const dk = dateKey(currentDate);
+  if (!trackerData[dk]) trackerData[dk] = {meals:{Breakfast:[],Lunch:[],Dinner:[],Snacks:[]}, notes:''};
+  trackerData[dk].notes = val;
+  saveTracker();
+}
+
+function renderTracker() {
+  document.getElementById('trackerDate').textContent = formatDate(currentDate);
+  const dk = dateKey(currentDate);
+  const dayData = trackerData[dk] || {meals:{Breakfast:[],Lunch:[],Dinner:[],Snacks:[]}, notes:''};
+
+  // Totals
+  let totalKcal = 0, totalProtein = 0;
+  ['Breakfast','Lunch','Dinner','Snacks'].forEach(m => {
+    (dayData.meals[m] || []).forEach(f => {
+      totalKcal += f.kcal;
+      totalProtein += f.protein;
+    });
+  });
+
+  const remain = TARGET_KCAL - totalKcal;
+  const pct = Math.min(Math.round(totalKcal / TARGET_KCAL * 100), 100);
+  const over = totalKcal > TARGET_KCAL;
+
+  document.getElementById('sumKcal').textContent = totalKcal;
+  document.getElementById('sumKcal').className = 'summary-val' + (over ? ' over' : '');
+  document.getElementById('sumRemain').textContent = over ? '+' + (totalKcal - TARGET_KCAL) : remain;
+  document.getElementById('sumRemain').className = 'summary-val' + (over ? ' over' : '');
+  document.getElementById('sumProtein').textContent = totalProtein;
+  document.getElementById('kcalBar').style.width = pct + '%';
+  document.getElementById('kcalBar').className = 'total-bar-fill' + (over ? ' over' : '');
+  document.getElementById('kcalBarLabel').textContent = `${totalKcal} / ${TARGET_KCAL} kcal · ${totalProtein}g / ${TARGET_PROTEIN}g protein`;
+
+  // Meal logs
+  ['Breakfast','Lunch','Dinner','Snacks'].forEach(m => {
+    const items = dayData.meals[m] || [];
+    const container = document.getElementById('log-' + m);
+    if (items.length === 0) {
+      container.innerHTML = `<div class="empty-log">Nothing logged yet</div>`;
+    } else {
+      container.innerHTML = items.map(f =>
+        `<div class="log-item">
+          <div class="log-item-name">${f.name}${f.amount ? ' <span style="color:var(--text-hint);font-size:11px">('+f.amount+')</span>' : ''}</div>
+          <div class="log-item-kcal">${f.kcal} kcal</div>
+          <div style="font-size:11px;color:var(--text-hint);min-width:36px;text-align:right">${f.protein}g P</div>
+          <button class="log-item-del" onclick="deleteFood('${m}',${f.id})">×</button>
+        </div>`
+      ).join('');
+    }
+  });
+
+  // Notes
+  document.getElementById('dayNotes').value = dayData.notes || '';
+}
+
+// ===== PAGE SWITCHING =====
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach((el, i) => {
+    el.classList.toggle('active',
+      (i===0&&p==='guide')||(i===1&&p==='meals')||(i===2&&p==='tracker'));
+  });
+}
+
+renderMeals();
+renderTracker();
+</script>
+</body>
+</html>
